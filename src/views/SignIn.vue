@@ -21,6 +21,7 @@
         <div class="title">Sign in with...</div>
         <div class="platform">
           <div class="google-icon" @click="gLogin"><img src="../assets/google-icon.png" alt="google login"></div>
+            <div class="facebook-icon" @click="fLogin"><img src="../assets/google-icon.png" alt="facebook login"></div>
         </div>
 
         <!--  <button @click="gLogin">Google Login</button>-->
@@ -32,6 +33,7 @@
 <script setup>
 import {reactive, ref} from 'vue'
 import firebase from 'firebase'
+// import { getAuth, signInWithPopup, FacebookAuthProvider } from "firebase/auth";
 import {useRouter} from 'vue-router' // import router
 // const credential = reactive({email:'',password:'',checked:''})
 const email = ref('')
@@ -39,7 +41,6 @@ const password = ref('')
 const checked = ref(false)
 const errMsg = ref() // ERROR MESSAGE
 const router = useRouter() // get a reference to our vue router
-console.log('sign in')
 
 const isLoggedIn = ref(true)
 // firebase
@@ -56,6 +57,8 @@ const isLoggedIn = ref(true)
 
 const gLogin = () => {
   let provider = new firebase.auth.GoogleAuthProvider();
+
+  //without remember me
   if (!checked.value) {
     firebase.auth()
         .setPersistence(firebase.auth.Auth.Persistence.SESSION)
@@ -107,6 +110,42 @@ const gLogin = () => {
       // ...
     });
   }
+}
+const fLogin = ()=> {
+  // const auth = getAuth();
+  // const provider = new FacebookAuthProvider();
+  const provider = new firebase.auth.FacebookAuthProvider()
+  // if(!checked.value){
+    firebase.auth()
+        .setPersistence(firebase.auth.Auth.Persistence.SESSION)
+        .then(() => {
+          return firebase.auth().signInWithPopup(provider)
+        })
+        .then((result) => {
+          /** @type {firebase.auth.OAuthCredential} */
+          var credential = result.credential;
+
+          // The signed-in user info.
+          var user = result.user;
+
+          // This gives you a Facebook Access Token. You can use it to access the Facebook API.
+          var accessToken = credential.accessToken;
+          router.push('/feed')
+          console.log('sucess')
+          // ...
+        })
+        .catch((error) => {
+          // Handle Errors here.
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          // The email of the user's account used.
+          var email = error.email;
+          // The firebase.auth.AuthCredential type that was used.
+          var credential = error.credential;
+
+          // ...
+        });
+  // }
 }
 const signIn = () => { // we also renamed this method
   if (!checked.value) {
@@ -220,13 +259,15 @@ input {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  margin-top: 20px;
 }
 
 input[type="checkbox"] {
   -webkit-appearance: checkbox;
   display: inline-block;
-  width: 15px;
-  height: 16px;
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
 }
 
 #username {
@@ -247,6 +288,7 @@ input[type="checkbox"] {
   color: #FFFFFF;
   text-transform: uppercase;
 }
+
 
 button {
   padding: 16px 117px 15px 117px;

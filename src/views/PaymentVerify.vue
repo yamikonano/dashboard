@@ -9,7 +9,7 @@
       to get started with Venbot!</p>
     <div class="bottom">
       <input type="text" id="code" placeholder="Code">
-      <button class="confirm">Confirm</button>
+      <button class="confirm" @click="jump">Confirm</button>
     </div>
 
   </div>
@@ -17,8 +17,18 @@
 </template>
 
 <script>
+import {useRouter} from 'vue-router'
 export default {
-  name: "PaymentVerify"
+  name: "PaymentVerify",
+  setup(){
+    const router = useRouter()
+    const jump = () => {
+      router.push('/dashboard')
+    }
+    return{
+      jump
+    }
+  }
 }
 </script>
 

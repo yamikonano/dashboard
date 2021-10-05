@@ -50,6 +50,39 @@ const router = createRouter({
             component: () => import('../views/PaymentVerify.vue')
         },
         {
+            path: '/dashboard',
+            component: () => import('../views/dashboard/Dashboard.vue')
+        },
+        {
+            path: '/community-builder',
+            component: () => import('../views/dashboard/Community.vue')
+        },
+        {
+            path: '/new-campaign',
+            name:"NewCampaign",
+            component: () => import('../views/dashboard/NewCampaign.vue')
+        },
+        {
+            path: '/reports',
+            name:"Reports",
+            component: () => import('../views/dashboard/Reports/Reports.vue')
+        },
+        {
+            path: '/users',
+            name:"Users",
+            component: () => import('../views/dashboard/Users/Users.vue')
+        },
+        // {
+        //     path: '/crm',
+        //     name:"CRM",
+        //     component: () => import('../pages/CRM/CRM.vue')
+        // },
+        {
+            path: '/crm/:category',
+            name:"CRM",
+            component: () => import('../pages/CRM/CRM.vue')
+        },
+        {
             path: '/',
             component: () => import('../views/SignIn.vue'),
             meta: { noNeedAuth: true }

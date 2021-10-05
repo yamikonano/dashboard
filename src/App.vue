@@ -1,37 +1,79 @@
 <template>
+  <template v-if="inDashboard">
+    <component is="style" scoped>
+      html,body{
+      background-color: #EFF3F9;
+      }
+    </component>
+    <Header></Header>
+    <div class="main-container">
+      <Navigator></Navigator>
+      <router-view/>
+    </div>
+  </template>
+  <template v-else>
+    <component is="style" scoped>
+      html {
+      background-color: #0F51B4;
+      font-family: Montserrat;
 
-  <div class="image-container">
-    <div class="circle"></div>
-    <div class="cloud"></div>
-  </div>
+      }
 
-  <div>
+      body {
+      background-color: #0F51B4 !important;
+      }
+    </component>
 
-    <!--    <nav>-->
-    <!--      <router-link to="/"> Home </router-link> |-->
-    <!--      <router-link to="/feed"> Feed </router-link> |-->
-          <span v-if="isLoggedIn">
-            <button @click="signOut"> Logout </button>
-          </span>
-    <!--      <span v-else>-->
-    <!--        <router-link to="/register"> Register </router-link> |-->
-    <!--        <router-link to="/sign-in"> Login </router-link>-->
-    <!--      </span>-->
-    <!--    </nav>-->
-    <router-view/>
-  </div>
-  <span v-if="isLoggedIn">
+    <div class="image-container">
+      <div class="circle"></div>
+      <div class="cloud"></div>
+    </div>
+
+    <div>
+
+      <!--    <nav>-->
+      <!--      <router-link to="/"> Home </router-link> |-->
+      <!--      <router-link to="/feed"> Feed </router-link> |-->
+      <span v-if="isLoggedIn">
+        <button @click="signOut"> Logout </button>
+      </span>
+      <!--      <span v-else>-->
+      <!--        <router-link to="/register"> Register </router-link> |-->
+      <!--        <router-link to="/sign-in"> Login </router-link>-->
+      <!--      </span>-->
+      <!--    </nav>-->
+      <router-view/>
+    </div>
+    <span v-if="isLoggedIn">
         <router-link to="/feed"></router-link>
-</span>
+    </span>
+
+  </template>
 </template>
 
 <script setup>
-import {ref, watchEffect} from 'vue' // used for conditional rendering
+import {ref, watchEffect, computed} from 'vue' // used for conditional rendering
 import firebase from 'firebase'
-import {useRouter} from 'vue-router'
-
+import {useRouter, useRoute} from 'vue-router'
+import Header from './components/Header.vue'
+import Navigator from './components/Navigator.vue'
 const router = useRouter()
+const route = useRoute()
 const isLoggedIn = ref(true)
+const inDashboard = computed(()=>{
+  switch (route.path){
+    case '/dashboard':
+    case '/community-builder':
+    case '/new-campaign':
+    case '/reports':
+    case '/users':
+    case '/crm':
+    case '/crm/:category':
+      return true
+    default:
+      return false
+  }
+})
 // runs after firebase is initialized
 firebase.auth().onAuthStateChanged(function (user) {
   if (user) {
@@ -50,6 +92,11 @@ const signOut = () => {
 <style>
 @import url(https://fonts.googleapis.com/css?family=Montserrat);
 @import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Mulish&display=swap');
 
 
 /*#app {*/
@@ -61,20 +108,15 @@ const signOut = () => {
 /*  margin-top: 60px;*/
 /*}*/
 
-html {
-  background-color: #0F51B4;
-  font-family: Montserrat;
-  /*overflow: hidden;*/
-  /*margin: 0;*/
-  /*padding: 0;*/
-}
-.image-container{
-  position:fixed;
+
+
+.image-container {
+  position: fixed;
   width: 100%;
   /*height: 100%;*/
   justify-content: space-between;
   align-items: center;
-  z-index:-1;
+  z-index: -1;
 }
 
 .circle {
@@ -85,7 +127,8 @@ html {
   margin-left: -300px;
   margin-top: 200px;
 }
-.cloud{
+
+.cloud {
   background-image: url(assets/cloud.png);
   background-size: cover;
   width: 972px;
@@ -93,5 +136,8 @@ html {
   margin-left: 100px;
   margin-top: 400px;
 }
-
+.main-container{
+  display: flex;
+  flex-direction: row;
+}
 </style>

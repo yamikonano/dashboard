@@ -3,6 +3,9 @@
   <input type="text" id="ig_username" placeholder="INSTAGRAM USERNAME" v-model="credential.ig_name">
   <input type="password" id="ig_password" placeholder="PASSWORD" v-model="credential.ig_pwd">
   <button class="connect" @click="verify">connect</button>
+  <div v-if="sentVerify">
+    <input type="text" id="ig_code" placeholder="code" v-model="credential.ig_code">
+  </div>
   <div class="agreement">
     <input type="checkbox" value="agree" id="agr"><lable for="agree">I accept and authorize Venbot to grow my Instagram profile within the
     <span style="font-weight: bolder; font-style: italic">terms of service</span>. </lable>
@@ -16,11 +19,21 @@ import {reactive,ref} from "vue";
 import {useRouter} from "vue-router";
 const credential = reactive({
   ig_name:'',
-  ig_pwd:''
+  ig_pwd:'',
+  ig_code:'',
 })
 const router = useRouter()
 const verify =()=>{
   router.push('/verify')
+}
+async verify(username,code){
+  const data = JSON.stringify({username,code})
+  console.log(data)
+
+  let config = {
+    method:"post"
+
+  }
 }
 
 </script>
